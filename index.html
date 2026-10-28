@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colegio Montano - Interactive Study Guide: Grammar Unit</title>
+    <style>
+        :root {
+            --primary-blue: #1269A8;
+            --bright-yellow: #F7D615;
+            --grayish-green: #54887D;
+            --light-blue: #88B5C7;
+            --light-olive-green: #A6B046;
+            --soft-white: #F2F5E9;
+            --dark-text: #2C3E50;
+            --card-bg: #FFFFFF;
+            --border-radius: 12px;
+            --box-shadow: 0 6px 16px rgba(18, 105, 168, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--soft-white);
+            color: var(--dark-text);
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .whiteboard-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--card-bg);
+            border: 4px solid var(--bright-yellow);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Header Styling */
+        .whiteboard-header {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid var(--bright-yellow);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .school-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--bright-yellow);
+            background: white;
+        }
+
+        .header-title h1 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .header-title p {
+            font-size: 0.9rem;
+            color: var(--light-blue);
+        }
+
+        .fullscreen-btn {
+            background-color: var(--bright-yellow);
+            color: var(--dark-text);
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .fullscreen-btn:hover {
+            background-color: #e5c40e;
+            transform: scale(1.05);
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            background-color: var(--grayish-green);
+            overflow-x: auto;
+            border-bottom: 3px solid var(--light-blue);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 14px 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            white-space: nowrap;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .tab-btn:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .tab-btn.active {
+            background-color: var(--soft-white);
+            color: var(--primary-blue);
+            border-bottom: 4px solid var(--bright-yellow);
+        }
+
+        /* Content Area */
+        .content-area {
+            padding: 30px;
+            max-height: 70vh;
+            overflow-y: auto;
+            background-color: var(--soft-white);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Typography & Section Styles */
+        h2 {
+            color: var(--primary-blue);
+            margin-bottom: 15px;
+            font-size: 1.6rem;
+            border-bottom: 2px solid var(--light-blue);
+            padding-bottom: 5px;
+        }
+
+        h3 {
+            color: var(--grayish-green);
+            margin: 20px 0 10px 0;
+            font-size: 1.3rem;
+        }
+
+        p {
+            margin-bottom: 12px;
+            line-height: 1.5;
+            font-size: 1.05rem;
+        }
+
+        /* Theory Cards & Visual Grid */
+        .theory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .theory-card {
+            background: var(--card-bg);
+            border-left: 5px solid var(--primary-blue);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+
+        .theory-card h4 {
+            color: var(--primary-blue);
+            margin-bottom: 8px;
+            font-size: 1.15rem;
+        }
+
+        .badge {
+            display: inline-block;
+            background-color: var(--light-olive-green);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /* Level Sections */
+        .level-section {
+            background: var(--card-bg);
+            border: 1px solid var(--light-blue);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+        }
+
+        .level-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--grayish-green);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .exercise-item {
+            background-color: #FAFAFA;
+            border: 1px solid #E0E0E0;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+        }
+
+        .exercise-question {
+            font-weight: 600;
+            color: var(--dark-text);
+            margin-bottom: 10px;
+        }
+
+        /* Solution Toggle Buttons */
+        .solution-btn {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .solution-btn:hover {
+            background-color: #0f5283;
+        }
+
+        .solution-container {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #EBF3F5;
+            border-left: 4px solid var(--light-blue);
+            border-radius: 4px;
+            font-size: 0.95rem;
+            color: #1A365D;
+        }
+
+        .solution-container.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* Reflection questions */
+        .reflection-box {
+            background-color: #FFFDF0;
+            border: 1px solid var(--bright-yellow);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        /* Footer info */
+        .whiteboard-footer {
+            background-color: var(--grayish-green);
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="whiteboard-container" id="whiteboard">
+        <!-- Header -->
+        <div class="whiteboard-header">
+            <div class="header-left">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyEop0yf6lZ7Jk9MILZxF1rBj4Oqs5esyhIQ&s" alt="Colegio Montano Logo" class="school-logo">
+                <div class="header-title">
+                    <h1>Colegio Montano - Digital Whiteboard</h1>
+                    <p>Second Grade | Our World 2: Grammar Unit (Prepositions & Pronouns)</p>
+                </div>
+            </div>
+            <button class="fullscreen-btn" onclick="toggleFullscreen()">[ ⛶ Fullscreen ]</button>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab(event, 'theory')">1. Theory</button>
+            <button class="tab-btn" onclick="switchTab(event, 'examples')">2. Examples</button>
+            <button class="tab-btn" onclick="switchTab(event, 'exercises')">3. Exercises</button>
+            <button class="tab-btn" onclick="switchTab(event, 'reflection')">4. Reflection</button>
+            <button class="tab-btn" onclick="switchTab(event, 'evaluation')">5. Evaluation</button>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area">
+
+            <!-- TAB 1: THEORY -->
+            <div id="theory" class="tab-content active">
+                <h2>Theoretical Framework: Prepositions of Place & Subject-Pronoun Agreement</h2>
+                <p>Welcome to our interactive grammar whiteboard! Today we will learn how to describe where objects are located in a room and how to talk about singular and plural items using NatGeo's <em>Our World 2</em> concepts.</p>
+                
+                <div class="theory-grid">
+                    <div class="theory-card">
+                        <span class="badge">Grammar I</span>
+                        <h4>Prepositions of Place</h4>
+                        <p>Words that show where things are located in relation to other objects:</p>
+                        <ul style="padding-left: 20px; font-size: 0.95rem;">
+                            <li><strong>Above:</strong> Higher than something else, without touching.</li>
+                            <li><strong>Under:</strong> Directly below or beneath something.</li>
+                            <li><strong>Next to:</strong> Beside or close to something.</li>
+                            <li><strong>Between:</strong> In the middle of two things.</li>
+                            <li><strong>Behind:</strong> At the back of something.</li>
+                            <li><strong>In front of:</strong> Ahead or facing something.</li>
+                        </ul>
+                    </div>
+
+                    <div class="theory-card">
+                        <span class="badge">Grammar II</span>
+                        <h4>Subject-Pronoun Agreement (It / They)</h4>
+                        <p>We use pronouns and specific question words depending on whether an object is singular or plural:</p>
+                        <ul style="padding-left: 20px; font-size: 0.95rem;">
+                            <li><strong>Singular:</strong> Use <em>Where's... ?</em> and answer with <em>It's...</em> (e.g., <em>Where's the lamp? It's behind an armchair.</em>)</li>
+                            <li><strong>Plural:</strong> Use <em>Where are... ?</em> and answer with <em>They're...</em> (e.g., <em>Where are the boots? They're under the bed.</em>)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: EXAMPLES -->
+            <div id="examples" class="tab-content">
+                <h2>Solved Examples (15 Total: Basic, Intermediate, Advanced)</h2>
+
+                <!-- Basic Examples -->
+                <div class="level-section">
+                    <div class="level-title">🟢 Basic Level Examples (Prepositions & Simple Pronouns)</div>
+                    
+                    <div class="exercise-item">
+                        <div class="exercise-question">Example 1: The glue is on the desk. Where is the glue?</div>
+                        <button class="solution-btn" onclick="toggleSolution('ex1')">Show Solution</button>
+                        <div id="ex1" class="solution-container"><strong>Solution:</strong> It's on the desk. (Singular object uses "It's" with preposition "on").</div>
+                    </div>
+
+                    <div class="exercise-item">
+                        <div class="exercise-question">Example 2: The pencils are next to the notebook. Where are the pencils?</div>
+                        <button class="solution-btn" onclick="toggleSolution('ex2')">Show Solution</button>
+                        <div id="ex2" class="solution-container"><strong>Solution:</strong> They're next to the notebook. (Plural object uses "They're" with preposition "next to").</div>
+                    </div>
+
+                    <div class="exercise-item">
+                        <div class="exercise-question">Example 3: The photo is above the notebook on the wall shelf.</div>
+                        <button class="solution-btn" onclick="toggleSolution('ex3')">Show Solution</button>
+                        <div id="ex3" class="solution-container"><strong>Solution:</strong> It's above the notebook. Position indicates higher vertical alignment without contact.</div>
+                    </div>
+
+                    <div class="exercise-item">
+                        <div class="exercise-question">Example 4: The scissors are next to the paper.</div>
+                        <button class="solution-btn" onclick="toggleSolution('ex4')">Show Solution</button>
+                        <div id="ex4" class="solution-container"><strong>Solution:</strong> They're next to the paper. ("Scissors" is plural in usage, requiring "They're").</div>
+                    </div>
+
+                    <div class="exercise-item">
+                        <div class="exercise-question">Example 5: The boots are under the bunk bed. Where are the boots?</div>
+                        <button class="solution-btn" onclick="toggleSolution('ex5')">Show Solution</button>
+                        <div id="ex5" class="solution-container"><strong>Solution:</strong> They're under the bed. Positioned directly beneath the lower bunk frame.</div>
+                    </div>
+                </div>
+
+                <!-- Intermediate Examples -->
+                <div class="level-section">
+                    <div class="level-title">🟡 Intermediate Level Examples (Combining Multiple Objects & Spatial Relationships)</div>
+                    
+                    <div class="exercise-item">
+                        <div class="exercise-question">Example 6: The pencils are positioned between the paper and the notebook.</div>
+                        <button class="solution-btn" onclick="toggleSolution('ex6')">Show Solution</button>
+                        <div id="ex6" class="solution-container"><strong>Solution:</strong> They're between the paper and the notebook. Requires identifying two lateral reference points.</div>
+                    </div>
+
+                    <div class="exercise-item">
+                        <div class="exercise-question">Example 7: The armchair is placed next to the fireplace in the living room.</div>
+                        <button class="solution-btn" onclick="toggleSolution('ex7')">Show Solution</button>
+                        <div id="ex7" class="solution-container"><strong>Solution:</strong> It's next to the fireplace. Singular pronoun "It's" matches the single armchair.</div>
+                    </div>
+
+                    <div class="exercise-item">
+                        <div class="exercise-question">Example 8: The rug is centered in front of the fireplace.</div>
+                        <button class="solution-btn" onclick="toggleSolution('ex8')">Show Solution</button>
+                        <div id="ex8" class="solution-container"><strong>Solution:</strong> It's in front of the fireplace. The rug faces the fireplace hearth directly.</div>
+                    </div>
+
+                    <div class="exercise-item">
+                        <div class="exercise-question">Example 9: The shelves are mounted above the stove in the kitchen setting.</div>
+                        <button class="solution-btn" onclick="toggleSolution('ex9')">Show Solution</button>
+                        <div id="ex9" class="solution-container"><strong>Solution:</strong> They're above the stove. "Shelves" is plural, taking "They're".</div>
+                    </div>
+
+                    <div class="exercise-item">
+                        <div class="exercise-question">Example 10: The bookcase is situated between the stairs and the armchair.</div>
+                        <button class="solution-btn" onclick="toggleSolution('ex10')">Show Solution</button>
+                        <div id="ex10" class="solution-container"><strong>Solution:</strong> It's between the stairs and the armchair. Single furniture piece positioned in an intermediate gap.</div>
+                    </div>
+                </div>
+
+                <!-- Advanced Examples -->
+                <div class="level-section">
+                    <div class="level-title">🔴 Advanced Level Examples (Complex Room Mapping & Question-Answer Formats)</div>
+                    
+                    <div class="exercise-item">
+                        <div class="exercise-question">Example 11: Question formulation for a single window located above a sofa: "Where is the window?"</div>
+                        <button class="solution-btn" onclick="toggleSolution('ex11')">Show Solution</button>
+                        <div id="ex11" class="solution-container"><strong>Solution:</strong> It's above the sofa. Combines correct interrogative "Where is" with exact spatial preposition.</div>
+                    </div>
+
+                    <div class="exercise-item">
+                        <div class="exercise-question">Example 12: Question formulation for multiple photo frames on shelves: "Where are the photos?"</div>
+                        <button class="solution-btn" onclick="toggleSolution('ex12')">Show Solution</button>
+                        <div id="ex12" class="solution-container"><strong>Solution:</strong> They're on the shelves. Plural subject-verb agreement ("Where are... They're").</div>
+                    </div>
+
+                    <div class="exercise-item">
+                        <div class="exercise-question">Example 13: Describing a lamp hidden behind an armchair: "Where is the lamp?"</div>
+                        <button class="solution-btn" onclick="toggleSolution('ex13')">Show Solution</button>
+                        <div id="ex13" class="solution-container"><strong>Solution:</strong> It's behind an armchair. Demonstrates obscured rear positioning.</div>
+                    </div>
+
+                    <div class="exercise-item">
+                        <div class="exercise-question">Example 14: Analyzing a room where two matching armchairs flank a central fireplace.</div>
+                        <button class="solution-btn" onclick="toggleSolution('ex14')">Show Solution</button>
+                        <div id="ex14" class="solution-container"><strong>Solution:</strong> They're between the fireplace and the side walls / or each is next to the fireplace. Multi-object orientation analysis.</div>
+                    </div>
+
+                    <div class="exercise-item">
+                        <div class="exercise-question">Example 15: Full dialogue synthesis: Asking and answering about boots under a bunk bed frame.</div>
+                        <button class="solution-btn" onclick="toggleSolution('ex15')">Show Solution</button>
+                        <div id="ex15" class="solution-container"><strong>Solution:</strong> Q: "Where are the boots?" | A: "They're under the beds." Complete structural mastery of plural subject agreement.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: EXERCISES -->
+            <div id="exercises" class="tab-content">
+                <h2>Practice Exercises (15 Total: Basic, Intermediate, Advanced)</h2>
+
+                <!-- Basic Exercises -->
+                <div class="level-section">
+                    <div class="level-title">🟢 Basic Level Practice</div>
+
+                    <div class="exercise-item">
+                        <div class="exercise-question">1. Complete the sentence based on desk layout: The notebook is ________ the glue. (Options: on / under)</div>
+                        <button class="solution-btn" onclick="toggleSolution('exer1')">Show Solution</button>
+                        <div id="exer1" class="solution-container"><strong>Answer:</strong> on (The notebook rests flat on top of the desk surface near the glue).</div>
+                    </div>
+
+                    <div class="exercise-item">
+                        <div class="exercise-question">2. Complete the sentence: The scissors are ________ the paper. (Options: next to / behind)</div>
+                        <button class="solution-btn" onclick="toggleSolution('exer2')">Show Solution</button>
+                        <div id="exer2" class="solution-container"><strong>Answer:</strong> next to</div>
+                    </div>
+
+                    <div class="exercise-item">
+                        <div class="exercise-question">3. Complete the sentence: The photo is ________ the notebook. (Options: next to / under)</div>
+                        <button class="solution-btn" onclick="toggleSolution('exer3')">Show Solution</button>
+                        <div id="exer3" class="solution-container"><strong>Answer:</strong> next to</div>
+                    </div>
+
+                    <div class="exercise-item">
+                        <div class="exercise-question">4. Complete the sentence: The boots are ________ the beds in the bedroom. (Options: under / above)</div>
+                        <button class="solution-btn" onclick="toggleSolution('exer4')">Show Solution</button>
+                        <div id="exer4" class="solution-container"><strong>Answer:</strong> under</div>
+                    </div>
+
+                    <div class="exercise-item">
+                        <div class="exercise-question">5. Complete the sentence: The picture frame is ________ the shelves. (Options: on / under)</div>
+                        <button class="solution-btn" onclick="toggleSolution('exer5')">Show Solution</button>
+                        <div id="exer5" class="solution-container"><strong>Answer:</strong> on</div>
+                    </div>
+                </div>
+
+                <!-- Intermediate Exercises -->
+                <div class="level-section">
+                    <div class="level-title">🟡 Intermediate Level Practice</div>
+
+                    <div class="exercise-item">
+                        <div class="exercise-question">6. Fill in the blank: The pencils are ________ the paper and the notebook. (Options: between / above)</div>
+                        <button class="solution-btn" onclick="toggleSolution('exer6')">Show Solution</button>
+                        <div id="exer6" class="solution-container"><strong>Answer:</strong> between</div>
+                    </div>
+
+                    <div class="exercise-item">
+                        <div class="exercise-question">7. Fill in the blank: The armchair is ________ the fireplace. (Options: next to / behind)</div>
+                        <button class="solution-btn" onclick="toggleSolution('exer7')">Show Solution</button>
+                        <div id="exer7" class="solution-container"><strong>Answer:</strong> next to</div>
+                    </div>
+
+                    <div class="exercise-item">
+                        <div class="exercise-question">8. Fill in the blank: The rug is ________ in front of the fireplace. (Options: right / flat) -> Choose preposition: ________ the fireplace.</div>
+                        <button class="solution-btn" onclick="toggleSolution('exer8')">Show Solution</button>
+                        <div id="exer8" class="solution-container"><strong>Answer:</strong> in front of</div>
+                    </div>
+
+                    <div class="exercise-item">
+                        <div class="exercise-question">9. Fill in the blank: The shelves are ________ the stove. (Options: above / under)</div>
+                        <button class="solution-btn" onclick="toggleSolution('exer9')">Show Solution</button>
+                        <div id="exer9" class="solution-container"><strong>Answer:</strong> above</div>
+                    </div>
+
+                    <div class="exercise-item">
+                        <div class="exercise-question">10. Fill in the blank: The bookcase is ________ the stairs and the armchair. (Options: between / behind)</div>
+                        <button class="solution-btn" onclick="toggleSolution('exer10')">Show Solution</button>
+                        <div id="exer10" class="solution-container"><strong>Answer:</strong> between</div>
+                    </div>
+                </div>
+
+                <!-- Advanced Exercises -->
+                <div class="level-section">
+                    <div class="level-title">🔴 Advanced Level Practice (Pronoun Agreement & Sentence Formation)</div>
+
+                    <div class="exercise-item">
+                        <div class="exercise-question">11. Write the correct pronoun response: "Where is the lamp?" -> "________ behind an armchair."</div>
+                        <button class="solution-btn" onclick="toggleSolution('exer11')">Show Solution</button>
+                        <div id="exer11" class="solution-container"><strong>Answer:</strong> It's (Singular subject lamp requires "It's").</div>
+                    </div>
+
+                    <div class="exercise-item">
+                        <div class="exercise-question">12. Write the correct pronoun response: "Where are the photos?" -> "________ on the shelves."</div>
+                        <button class="solution-btn" onclick="toggleSolution('exer12')">Show Solution</button>
+                        <div id="exer12" class="solution-container"><strong>Answer:</strong> They're (Plural subject photos requires "They're").</div>
+                    </div>
+
+                    <div class="exercise-item">
+                        <div class="exercise-question">13. Complete the question: "________ is the window?" -> Answer: "It's above the sofa."</div>
+                        <button class="solution-btn" onclick="toggleSolution('exer13')">Show Solution</button>
+                        <div id="exer13" class="solution-container"><strong>Answer:</strong> Where</div>
+                    </div>
+
+                    <div class="exercise-item">
+                        <div class="exercise-question">14. Complete the question: "________ are the boots?" -> Answer: "They're under the bed."</div>
+                        <button class="solution-btn" onclick="toggleSolution('exer14')">Show Solution</button>
+                        <div id="exer14" class="solution-container"><strong>Answer:</strong> Where</div>
+                    </div>
+
+                    <div class="exercise-item">
+                        <div class="exercise-question">15. Formulate a full sentence for a rug located in front of a sofa: "The rug is ________."</div>
+                        <button class="solution-btn" onclick="toggleSolution('exer15')">Show Solution</button>
+                        <div id="exer15" class="solution-container"><strong>Answer:</strong> in front of the sofa.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: REFLECTION -->
+            <div id="reflection" class="tab-content">
+                <h2>Critical Reflection & Conceptual Thinking</h2>
+                <p>Discuss these open questions with your partner or teacher to deepen your logical reasoning:</p>
+
+                <div class="reflection-box">
+                    <h3>Question 1: Spatial Perspective</h3>
+                    <p>Why is it important to know where an object is located when you describe your bedroom to a friend in English?</p>
+                </div>
+
+                <div class="reflection-box">
+                    <h3>Question 2: Singular vs. Plural Grammar</h3>
+                    <p>How do you decide whether to start an answer with <strong>"It's"</strong> or <strong>"They're"</strong> when someone asks you about items on your desk?</p>
+                </div>
+
+                <div class="reflection-box">
+                    <h3>Question 3: Real-World Application</h3>
+                    <p>Look around your classroom right now. Can you find something <em>above</em> your head and something <em>between</em> two objects? Describe them!</p>
+                </div>
+            </div>
+
+            <!-- TAB 5: EVALUATION -->
+            <div id="evaluation" class="tab-content">
+                <h2>Formative Evaluation & Reinforcement</h2>
+                <p>Test your mastery of Unit 2 grammar concepts. Click "Show Solution" to verify your answers.</p>
+
+                <div class="exercise-item">
+                    <div class="exercise-question">Evaluation 1: Choose the correct word: "The armchair is next to / between the fireplace."</div>
+                    <button class="solution-btn" onclick="toggleSolution('eval1')">Show Solution</button>
+                    <div id="eval1" class="solution-container"><strong>Solution:</strong> next to (An armchair is placed beside a single fireplace).</div>
+                </div>
+
+                <div class="exercise-item">
+                    <div class="exercise-question">Evaluation 2: Complete the question for plural boots: "________ are the boots?"</div>
+                    <button class="solution-btn" onclick="toggleSolution('eval2')">Show Solution</button>
+                    <div id="eval2" class="solution-container"><strong>Solution:</strong> Where</div>
+                </div>
+
+                <div class="exercise-item">
+                    <div class="exercise-question">Evaluation 3: Match the preposition with its visual definition: What does "between" mean?</div>
+                    <button class="solution-btn" onclick="toggleSolution('eval3')">Show Solution</button>
+                    <div id="eval3" class="solution-container"><strong>Solution:</strong> In the middle of two objects or reference points.</div>
+                </div>
+
+                <div class="exercise-item">
+                    <div class="exercise-question">Evaluation 4: Correct the mistake: "Where is the pencils? They're on the desk."</div>
+                    <button class="solution-btn" onclick="toggleSolution('eval4')">Show Solution</button>
+                    <div id="eval4" class="solution-container"><strong>Solution:</strong> Change "Where is" to "Where are" because "pencils" is plural.</div>
+                </div>
+
+                <div class="exercise-item">
+                    <div class="exercise-question">Evaluation 5: True or False: We use "It's" when talking about multiple books on a shelf.</div>
+                    <button class="solution-btn" onclick="toggleSolution('eval5')">Show Solution</button>
+                    <div id="eval5" class="solution-container"><strong>Solution:</strong> False. We use "They're" for plural items like multiple books.</div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="whiteboard-footer">
+            Colegio Montano &copy; 2026 | Educational Interactive Digital Whiteboard for Canvas Education
+        </div>
+    </div>
+
+    <script>
+        // Tab switching logic
+        function switchTab(evt, tabName) {
+            const contents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].classList.remove("active");
+            }
+
+            const buttons = document.getElementsByClassName("tab-btn");
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove("active");
+            }
+
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        // Toggle solution visibility
+        function toggleSolution(id) {
+            const solutionDiv = document.getElementById(id);
+            solutionDiv.classList.toggle("show");
+            const btn = solutionDiv.previousElementSibling;
+            if (solutionDiv.classList.contains("show")) {
+                btn.textContent = "Hide Solution";
+                btn.style.backgroundColor = "#54887D";
+            } else {
+                btn.textContent = "Show Solution";
+                btn.style.backgroundColor = "#1269A8";
+            }
+        }
+
+        // Fullscreen API toggle
+        function toggleFullscreen() {
+            const elem = document.getElementById("whiteboard");
+            if (!document.fullscreenElement) {
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen();
+                } else if (elem.webkitRequestFullscreen) { /* Safari */
+                    elem.webkitRequestFullscreen();
+                } else if (elem.msRequestFullscreen) { /* IE11 */
+                    elem.msRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) { /* Safari */
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) { /* IE11 */
+                    document.msExitFullscreen();
+                }
+            }
+        }
+    </script>
+</body>
+</html>
